@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillNest Services</title>
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #e53935;
+            --secondary-color: #ffffff;
+            --background-color: #f9f9f9;
+            --text-color: #333333;
+            --light-gray: #f0f0f0;
+            --medium-gray: #cccccc;
+            --dark-gray: #666666;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --info-color: #2196f3;
+            --selection-color: #ffebee;
+            --selection-border: #e53935;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-tertiary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid transparent;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: var(--secondary-color);
+        }
+
+        .btn-primary:hover, .btn-secondary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-tertiary:hover {
+            text-decoration: underline;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .card {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Language Selection Screen */
+        #language-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .language-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+            max-width: 600px;
+        }
+
+        .language-btn {
+            padding: 15px;
+            background-color: var(--secondary-color);
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .language-btn:hover {
+            background-color: var(--light-gray);
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+        }
+
+        .language-btn.selected {
+            background-color: var(--selection-color);
+            border-color: var(--selection-border);
+            color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(229, 57, 53, 0.2);
+        }
+
+        /* User Type Selection Screen */
+        #user-type-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .user-type-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+            max-width: 600px;
+        }
+
+        .user-type-card {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .user-type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .user-type-card.selected {
+            border-color: var(--selection-border);
+            background-color: var(--selection-color);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(229, 57, 53, 0.2);
+        }
+
+        .user-type-card.selected .user-icon {
+            color: var(--primary-color);
+        }
+
+        .user-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        /* Login/Signup Selection Screen */
+        #auth-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .auth-options {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .auth-card {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            min-width: 200px;
+        }
+
+        .auth-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .auth-card.selected {
+            border-color: var(--selection-border);
+            background-color: var(--selection-color);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(229, 57, 53, 0.2);
+        }
+
+        .auth-card.selected .auth-icon {
+            color: var(--primary-color);
+        }
+
+        .auth-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Login/Signup Screen */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 4px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.2);
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            color: var(--primary-color);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 8px 12px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: var(--light-gray);
+            border-color: var(--primary-color);
+        }
+
+        /* Dashboard Styles */
+        #dashboard {
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .menu-btn {
+            background: none;
+            color: var(--secondary-color);
+            font-size: 24px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--secondary-color);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: var(--secondary-color);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            z-index: 200;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .close-btn {
+            background: none;
+            font-size: 24px;
+            color: var(--dark-gray);
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: var(--light-gray);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: var(--light-gray);
+            border-color: var(--medium-gray);
+        }
+
+        .sidebar-menu a.active {
+            background-color: var(--selection-color);
+            border-color: var(--selection-border);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .main-content {
+            padding: 20px 0;
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--dark-gray);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            border-color: var(--primary-color);
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--primary-color);
+        }
+
+        .service-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .service-category {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .service-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .service-category.selected {
+            border-color: var(--selection-border);
+            background-color: var(--selection-color);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(229, 57, 53, 0.2);
+        }
+
+        /* Report Problem Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .close-modal {
+            background: none;
+            font-size: 24px;
+            color: var(--dark-gray);
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background-color: var(--light-gray);
+        }
+
+        .problem-description {
+            position: relative;
+        }
+
+        .text-to-speech {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: none;
+            color: var(--primary-color);
+            font-size: 18px;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .text-to-speech:hover {
+            background-color: var(--light-gray);
+        }
+
+        .location-selection {
+            margin: 20px 0;
+        }
+
+        .location-options {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        .location-btn {
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .location-btn.selected {
+            background-color: var(--selection-color);
+            border-color: var(--selection-border);
+            color: var(--primary-color);
+        }
+
+        /* Payment Options */
+        .payment-options {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .payment-btn {
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .payment-btn.selected {
+            background-color: var(--selection-color);
+            border-color: var(--selection-border);
+            color: var(--primary-color);
+        }
+
+        /* Edit Profile Modal */
+        #edit-profile-modal .modal-content {
+            max-width: 500px;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        .language-switcher-btn {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .language-switcher-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Rating System */
+        .rating {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .star {
+            color: var(--medium-gray);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star:hover {
+            color: var(--warning-color);
+            transform: scale(1.2);
+        }
+
+        .star.active {
+            color: var(--warning-color);
+        }
+
+        /* Service Provider Specific Styles */
+        .service-skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .skill-item {
+            background-color: var(--light-gray);
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Page Navigation */
+        .page-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .language-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .user-type-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .auth-options {
+                flex-direction: column;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .service-categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .location-options, .payment-options {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .service-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selection Screen -->
+    <div id="language-selection" class="screen">
+        <h1>SkillNest Services</h1>
+        <p data-translate="selectLanguage">Select your preferred language</p>
+        <div class="language-options">
+            <button class="language-btn" data-lang="en">English</button>
+            <button class="language-btn" data-lang="hi">Hindi</button>
+            <button class="language-btn" data-lang="te">Telugu</button>
+            <button class="language-btn" data-lang="ta">Tamil</button>
+            <button class="language-btn" data-lang="kn">Kannada</button>
+            <button class="language-btn" data-lang="or">Odia</button>
+            <button class="language-btn" data-lang="ur">Urdu</button>
+            <button class="language-btn" data-lang="bn">Bengali</button>
+        </div>
+    </div>
+
+    <!-- User Type Selection Screen -->
+    <div id="user-type-selection" class="screen hidden">
+        <button class="back-btn" id="back-to-language">
+            ← <span data-translate="back">Back</span>
+        </button>
+        
+        <h1>SkillNest Services</h1>
+        <p>Select your user type</p>
+        
+        <div class="user-type-options">
+            <div class="user-type-card" data-user-type="customer">
+                <div class="user-icon">👤</div>
+                <h3 data-translate="customer">Customer</h3>
+                <p>Find service providers for your needs</p>
+            </div>
+            <div class="user-type-card" data-user-type="service">
+                <div class="user-icon">🔧</div>
+                <h3 data-translate="serviceProvider">Service Provider</h3>
+                <p>Offer your services to customers</p>
+            </div>
+            <div class="user-type-card" data-user-type="learner">
+                <div class="user-icon">📚</div>
+                <h3 data-translate="learner">Learner</h3>
+                <p>Learn new skills and courses</p>
+            </div>
+            <div class="user-type-card" data-user-type="mentor">
+                <div class="user-icon">👨‍🏫</div>
+                <h3 data-translate="mentor">Mentor</h3>
+                <p>Teach and guide learners</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Selection Screen -->
+    <div id="auth-selection" class="screen hidden">
+        <button class="back-btn" id="back-to-user-type">
+            ← <span data-translate="back">Back</span>
+        </button>
+        
+        <h1>SkillNest Services</h1>
+        <p id="selected-user-type-message">Welcome, Customer!</p>
+        <p>Choose how you want to continue</p>
+        
+        <div class="auth-options">
+            <div class="auth-card" data-auth-type="login">
+                <div class="auth-icon">🔑</div>
+                <h3 data-translate="login">Login</h3>
+                <p>Already have an account</p>
+            </div>
+            <div class="auth-card" data-auth-type="signup">
+                <div class="auth-icon">📝</div>
+                <h3 data-translate="signup">Sign Up</h3>
+                <p>Create a new account</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Signup Screen -->
+    <div id="login-screen" class="screen hidden">
+        <button class="back-btn" id="back-to-auth">
+            ← <span data-translate="back">Back</span>
+        </button>
+        
+        <h1>SkillNest Services</h1>
+        <p id="auth-message">Login to your account</p>
+        
+        <div class="form-container">
+            <div id="login-form" class="form-section">
+                <h2 data-translate="login">Login</h2>
+                <div class="form-group">
+                    <label for="login-email" data-translate="email">Email ID</label>
+                    <input type="email" id="login-email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password" data-translate="password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password">
+                </div>
+                <button class="btn-primary" id="login-btn" data-translate="login">Login</button>
+                <p data-translate="dontHaveAccount">Don't have an account? <a href="#" id="show-signup" data-translate="signup">Sign up</a></p>
+            </div>
+            
+            <div id="signup-form" class="form-section hidden">
+                <h2 id="signup-title" data-translate="createAccount">Create Account</h2>
+                
+                <!-- Common fields for all user types -->
+                <div class="form-group">
+                    <label for="signup-name" data-translate="fullName">Full Name</label>
+                    <input type="text" id="signup-name" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="signup-email" data-translate="email">Email ID</label>
+                    <input type="email" id="signup-email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="signup-phone" data-translate="phone">Phone Number</label>
+                    <input type="tel" id="signup-phone" placeholder="Enter 10-digit phone number" maxlength="10">
+                </div>
+                
+                <!-- Customer specific fields -->
+                <div class="form-group" id="customer-fields">
+                    <label for="signup-address" data-translate="address">Address</label>
+                    <textarea id="signup-address" placeholder="Enter your address"></textarea>
+                </div>
+                
+                <!-- Service Provider specific fields -->
+                <div id="service-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="signup-address-service" data-translate="address">Address</label>
+                        <textarea id="signup-address-service" placeholder="Enter your address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-bank" data-translate="bankAccount">Bank Account Number</label>
+                        <input type="text" id="signup-bank" placeholder="Enter bank account number">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-service-types">Service Types</label>
+                        <div class="form-row">
+                            <label><input type="checkbox" name="service-type" value="ac"> AC Mechanic</label>
+                            <label><input type="checkbox" name="service-type" value="wiring"> House Wiring</label>
+                            <label><input type="checkbox" name="service-type" value="washing"> Washing Machine</label>
+                        </div>
+                        <div class="form-row">
+                            <label><input type="checkbox" name="service-type" value="car"> Car & Bike</label>
+                            <label><input type="checkbox" name="service-type" value="water"> Water Motor</label>
+                            <label><input type="checkbox" name="service-type" value="other"> Other</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Learner specific fields -->
+                <div id="learner-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="signup-address-learner" data-translate="address">Address</label>
+                        <textarea id="signup-address-learner" placeholder="Enter your address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-payment-method">Preferred Payment Method</label>
+                        <select id="signup-payment-method">
+                            <option value="phonepay">PhonePe</option>
+                            <option value="gpay">GPay</option>
+                            <option value="upi">UPI</option>
+                            <option value="netbanking">Net Banking</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Mentor specific fields -->
+                <div id="mentor-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="signup-address-mentor" data-translate="address">Address</label>
+                        <textarea id="signup-address-mentor" placeholder="Enter your address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-bank-mentor" data-translate="bankAccount">Bank Account Number</label>
+                        <input type="text" id="signup-bank-mentor" placeholder="Enter bank account number">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-subjects">Subjects You Teach</label>
+                        <div class="form-row">
+                            <label><input type="checkbox" name="subject" value="ac"> AC Mechanic</label>
+                            <label><input type="checkbox" name="subject" value="wiring"> House Wiring</label>
+                            <label><input type="checkbox" name="subject" value="washing"> Washing Machine</label>
+                        </div>
+                        <div class="form-row">
+                            <label><input type="checkbox" name="subject" value="car"> Car & Bike</label>
+                            <label><input type="checkbox" name="subject" value="water"> Water Motor</label>
+                            <label><input type="checkbox" name="subject" value="other"> Other</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Common password fields -->
+                <div class="form-group">
+                    <label for="signup-password" data-translate="password">Password</label>
+                    <input type="password" id="signup-password" placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password" data-translate="confirmPassword">Confirm Password</label>
+                    <input type="password" id="signup-confirm-password" placeholder="Confirm your password">
+                </div>
+                
+                <button class="btn-primary" id="signup-btn" data-translate="createAccount">Create Account</button>
+                <p data-translate="alreadyHaveAccount">Already have an account? <a href="#" id="show-login" data-translate="login">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="screen hidden">
+        <div class="header">
+            <div class="container header-content">
+                <button class="menu-btn">☰</button>
+                <div class="logo">SkillNest Services</div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-avatar">👤</div>
+                        <span id="user-name">User</span>
+                    </div>
+                    <button class="logout-btn" id="header-logout-btn">
+                        <span>🚪</span>
+                        <span data-translate="logout">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3 data-translate="menu">Menu</h3>
+                <button class="close-btn">×</button>
+            </div>
+            <ul class="sidebar-menu" id="customer-menu">
+                <li><a href="#" data-page="profile" data-translate="profile" class="active">Profile</a></li>
+                <li><a href="#" data-page="reports" data-translate="myReports">My Reports</a></li>
+                <li><a href="#" data-page="history" data-translate="history">History</a></li>
+                <li><a href="#" id="logout-btn" data-translate="logout">Logout</a></li>
+            </ul>
+            <ul class="sidebar-menu" id="service-menu" style="display: none;">
+                <li><a href="#" data-page="profile" data-translate="profile" class="active">Profile</a></li>
+                <li><a href="#" data-page="job-applications" data-translate="jobApplications">Job Applications</a></li>
+                <li><a href="#" data-page="my-jobs" data-translate="myJobs">My Jobs</a></li>
+                <li><a href="#" data-page="reviews" data-translate="reviews">Reviews</a></li>
+                <li><a href="#" id="logout-btn" data-translate="logout">Logout</a></li>
+            </ul>
+            <ul class="sidebar-menu" id="learner-menu" style="display: none;">
+                <li><a href="#" data-page="profile" data-translate="profile" class="active">Profile</a></li>
+                <li><a href="#" data-page="courses" data-translate="myCourses">My Courses</a></li>
+                <li><a href="#" data-page="exams" data-translate="exams">Exams</a></li>
+                <li><a href="#" id="logout-btn" data-translate="logout">Logout</a></li>
+            </ul>
+            <ul class="sidebar-menu" id="mentor-menu" style="display: none;">
+                <li><a href="#" data-page="profile" data-translate="profile" class="active">Profile</a></li>
+                <li><a href="#" data-page="students" data-translate="students">Students</a></li>
+                <li><a href="#" data-page="courses" data-translate="courses">Courses</a></li>
+                <li><a href="#" id="logout-btn" data-translate="logout">Logout</a></li>
+            </ul>
+        </div>
+        
+        <div class="container main-content">
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <button class="btn-tertiary" id="back-to-previous">
+                    ← <span data-translate="back">Back</span>
+                </button>
+                <button class="btn-tertiary" id="back-to-profile">
+                    <span data-translate="profile">Profile</span> →
+                </button>
+            </div>
+            
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <div class="profile-section">
+                    <div class="profile-pic">👤</div>
+                    <div class="profile-info">
+                        <h2 id="profile-name">User Name</h2>
+                        <p id="profile-email">user@example.com</p>
+                        <p id="profile-phone">+91 9876543210</p>
+                        <button class="btn-secondary" id="edit-profile-btn" data-translate="editProfile">Edit Profile</button>
+                    </div>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3 data-translate="reportsApplied">Reports Applied</h3>
+                        <div class="stat-value" id="reports-count">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3 data-translate="problemsSolved">Problems Solved</h3>
+                        <div class="stat-value" id="solved-count">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3 data-translate="liveChats">Live Chats</h3>
+                        <div class="stat-value" id="chats-count">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3 data-translate="rating">Rating</h3>
+                        <div class="stat-value" id="rating-value">0.0</div>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Customer Specific Content -->
+                <div id="customer-specific" style="display: none;">
+                    <h2 data-translate="reportProblem">Report a Problem</h2>
+                    <div class="service-categories">
+                        <div class="service-category" data-service="ac">
+                            <div>❄️</div>
+                            <div>AC Mechanic</div>
+                        </div>
+                        <div class="service-category" data-service="wiring">
+                            <div>⚡</div>
+                            <div>House Wiring</div>
+                        </div>
+                        <div class="service-category" data-service="washing">
+                            <div>🧼</div>
+                            <div>Washing Machine</div>
+                        </div>
+                        <div class="service-category" data-service="car">
+                            <div>🚗</div>
+                            <div>Car & Bike</div>
+                        </div>
+                        <div class="service-category" data-service="water">
+                            <div>💧</div>
+                            <div>Water Motor</div>
+                        </div>
+                        <div class="service-category" data-service="other">
+                            <div>🔧</div>
+                            <div>Other</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Service Provider Specific Content -->
+                <div id="service-specific" style="display: none;">
+                    <h2 data-translate="myServices">My Services</h2>
+                    <div class="service-categories">
+                        <div class="service-category" data-service="ac">
+                            <div>❄️</div>
+                            <div>AC Mechanic</div>
+                        </div>
+                        <div class="service-category" data-service="wiring">
+                            <div>⚡</div>
+                            <div>House Wiring</div>
+                        </div>
+                        <div class="service-category" data-service="washing">
+                            <div>🧼</div>
+                            <div>Washing Machine</div>
+                        </div>
+                        <div class="service-category" data-service="car">
+                            <div>🚗</div>
+                            <div>Car & Bike</div>
+                        </div>
+                        <div class="service-category" data-service="water">
+                            <div>💧</div>
+                            <div>Water Motor</div>
+                        </div>
+                    </div>
+                    
+                    <h2>Service Skills</h2>
+                    <div class="service-skills">
+                        <div class="skill-item">Experience: <span id="exp-years">0</span> years</div>
+                        <div class="skill-item">Success Rate: <span id="success-rate">0</span>%</div>
+                        <div class="skill-item">Communication: <span id="comm-rating">0</span>/5</div>
+                        <div class="skill-item">Customer Behavior: <span id="behavior-rating">0</span>/5</div>
+                    </div>
+                    
+                    <h2 data-translate="jobApplications">Job Applications</h2>
+                    <div class="card">
+                        <p>No pending job applications</p>
+                    </div>
+                </div>
+                
+                <!-- Learner Specific Content -->
+                <div id="learner-specific" style="display: none;">
+                    <h2>My Learning Journey</h2>
+                    <div class="card">
+                        <h3>Current Courses</h3>
+                        <ul>
+                            <li>AC Repair Fundamentals</li>
+                            <li>Electrical Wiring Basics</li>
+                            <li>Home Appliance Maintenance</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Upcoming Exams</h3>
+                        <p>Next exam: Electrical Safety - June 15, 2023</p>
+                    </div>
+                </div>
+                
+                <!-- Mentor Specific Content -->
+                <div id="mentor-specific" style="display: none;">
+                    <h2>Teaching Dashboard</h2>
+                    <div class="card">
+                        <h3>My Students</h3>
+                        <p>Total Students: <strong>24</strong></p>
+                        <p>Active Students: <strong>18</strong></p>
+                    </div>
+                    <div class="card">
+                        <h3>Course Performance</h3>
+                        <p>Average Student Rating: <strong>4.7/5</strong></p>
+                        <p>Completion Rate: <strong>92%</strong></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports Page -->
+            <div id="reports-page" class="page hidden">
+                <h2 data-translate="myReports">My Reports</h2>
+                <div class="card">
+                    <h3>Recent Reports</h3>
+                    <p>No reports submitted yet</p>
+                </div>
+            </div>
+            
+            <!-- History Page -->
+            <div id="history-page" class="page hidden">
+                <h2 data-translate="serviceHistory">Service History</h2>
+                <div class="card">
+                    <h3>Past Services</h3>
+                    <p>No service history available</p>
+                </div>
+            </div>
+            
+            <!-- Job Applications Page -->
+            <div id="job-applications-page" class="page hidden">
+                <h2 data-translate="jobApplications">Job Applications</h2>
+                <div class="card">
+                    <h3>Available Jobs</h3>
+                    <p>No job applications available</p>
+                </div>
+            </div>
+            
+            <!-- My Jobs Page -->
+            <div id="my-jobs-page" class="page hidden">
+                <h2 data-translate="myJobs">My Jobs</h2>
+                <div class="card">
+                    <h3>Current Jobs</h3>
+                    <p>No active jobs</p>
+                </div>
+            </div>
+            
+            <!-- Reviews Page -->
+            <div id="reviews-page" class="page hidden">
+                <h2 data-translate="reviews">Reviews</h2>
+                <div class="card">
+                    <h3>Customer Feedback</h3>
+                    <p>No reviews yet</p>
+                </div>
+            </div>
+            
+            <!-- Courses Page -->
+            <div id="courses-page" class="page hidden">
+                <h2 data-translate="myCourses">My Courses</h2>
+                <div class="card">
+                    <h3>Enrolled Courses</h3>
+                    <ul>
+                        <li>AC Repair Fundamentals - In Progress</li>
+                        <li>Electrical Wiring Basics - Completed</li>
+                        <li>Home Appliance Maintenance - Not Started</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Exams Page -->
+            <div id="exams-page" class="page hidden">
+                <h2 data-translate="exams">Exams</h2>
+                <div class="card">
+                    <h3>Exam Schedule</h3>
+                    <p>No upcoming exams</p>
+                </div>
+            </div>
+            
+            <!-- Students Page -->
+            <div id="students-page" class="page hidden">
+                <h2 data-translate="students">Students</h2>
+                <div class="card">
+                    <h3>Student Roster</h3>
+                    <p>No students enrolled</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Language Switcher -->
+        <div class="language-switcher">
+            <button class="language-switcher-btn">🌐</button>
+        </div>
+    </div>
+
+    <!-- Report Problem Modal -->
+    <div id="report-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate="reportProblem">Report a Problem</h2>
+                <button class="close-modal">×</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="problem-category">Service Category</label>
+                <select id="problem-category">
+                    <option value="ac">AC Mechanic</option>
+                    <option value="wiring">House Wiring</option>
+                    <option value="washing">Washing Machine</option>
+                    <option value="car">Car & Bike</option>
+                    <option value="water">Water Motor</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="other-category" style="display: none;">
+                <label for="other-category-text">Specify Problem Type</label>
+                <input type="text" id="other-category-text" placeholder="Describe the problem type">
+            </div>
+            
+            <div class="form-group problem-description">
+                <label for="problem-description">Problem Description</label>
+                <textarea id="problem-description" rows="4" placeholder="Describe your problem in detail"></textarea>
+                <button class="text-to-speech" title="Convert to speech">🔊</button>
+            </div>
+            
+            <div class="form-group">
+                <label>Upload Media (Optional)</label>
+                <div class="form-row">
+                    <button class="btn-secondary" id="upload-photo">Photo</button>
+                    <button class="btn-secondary" id="upload-video">Video</button>
+                    <button class="btn-secondary" id="record-voice">Voice</button>
+                </div>
+            </div>
+            
+            <div class="location-selection">
+                <label data-translate="selectLocation">Select Location</label>
+                <div class="location-options">
+                    <button class="location-btn btn-secondary" id="current-location" data-translate="currentLocation">Current Location</button>
+                    <button class="location-btn btn-secondary" id="manual-location" data-translate="manualLocation">Manual Location</button>
+                </div>
+                <div id="location-display">No location selected</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="emergency-level" data-translate="emergencyLevel">Emergency Level</label>
+                <select id="emergency-level">
+                    <option value="normal">Normal (2-3 hours)</option>
+                    <option value="medium">Medium (1-2 hours)</option>
+                    <option value="high">High (Within 1 hour)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label data-translate="paymentMethod">Payment Method</label>
+                <div class="payment-options">
+                    <button class="payment-btn btn-secondary" data-payment="upi">UPI</button>
+                    <button class="payment-btn btn-secondary" data-payment="netbanking">Net Banking</button>
+                    <button class="payment-btn btn-secondary" data-payment="wallet">Wallet</button>
+                </div>
+            </div>
+            
+            <button class="btn-primary" id="submit-report" data-translate="pay50Percent">Submit Report (Pay 50%)</button>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate="editProfile">Edit Profile</h2>
+                <button class="close-modal">×</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-name" data-translate="fullName">Full Name</label>
+                <input type="text" id="edit-name" placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-email" data-translate="email">Email ID</label>
+                <input type="email" id="edit-email" placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-phone" data-translate="phone">Phone Number</label>
+                <input type="tel" id="edit-phone" placeholder="Enter 10-digit phone number" maxlength="10">
+            </div>
+            
+            <div class="form-group" id="edit-address-group">
+                <label for="edit-address" data-translate="address">Address</label>
+                <textarea id="edit-address" placeholder="Enter your address"></textarea>
+            </div>
+            
+            <!-- Service Provider Specific Fields -->
+            <div id="service-edit-fields" style="display: none;">
+                <div class="form-group">
+                    <label for="edit-experience">Years of Experience</label>
+                    <input type="number" id="edit-experience" min="0" max="50" value="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-success-rate">Success Rate (%)</label>
+                    <input type="number" id="edit-success-rate" min="0" max="100" value="0">
+                </div>
+                
+                <div class="form-group">
+                    <label>Service Types</label>
+                    <div class="form-row">
+                        <label><input type="checkbox" name="service-type" value="ac"> AC Mechanic</label>
+                        <label><input type="checkbox" name="service-type" value="wiring"> House Wiring</label>
+                        <label><input type="checkbox" name="service-type" value="washing"> Washing Machine</label>
+                    </div>
+                    <div class="form-row">
+                        <label><input type="checkbox" name="service-type" value="car"> Car & Bike</label>
+                        <label><input type="checkbox" name="service-type" value="water"> Water Motor</label>
+                        <label><input type="checkbox" name="service-type" value="other"> Other</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-shifts">Work Shifts</label>
+                    <select id="edit-shifts" multiple>
+                        <option value="shift-a">Shift A (6 AM - 12 PM)</option>
+                        <option value="shift-b">Shift B (12 PM - 6 PM)</option>
+                        <option value="shift-c">Shift C (6 PM - 12 AM)</option>
+                        <option value="shift-d">Shift D (12 AM - 6 AM)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn-primary" id="save-profile-btn">Save Changes</button>
+        </div>
+    </div>
+
+    <script>
+        // Language data
+        const translations = {
+            en: {
+                welcome: "Welcome to SkillNest Services",
+                selectLanguage: "Select your preferred language",
+                loginOrSignup: "Login or create a new account",
+                login: "Login",
+                signup: "Sign Up",
+                customer: "Customer",
+                serviceProvider: "Service Provider",
+                learner: "Learner",
+                mentor: "Mentor",
+                email: "Email ID",
+                password: "Password",
+                fullName: "Full Name",
+                phone: "Phone Number",
+                address: "Address",
+                bankAccount: "Bank Account Number",
+                confirmPassword: "Confirm Password",
+                createAccount: "Create Account",
+                alreadyHaveAccount: "Already have an account?",
+                dontHaveAccount: "Don't have an account?",
+                profile: "Profile",
+                myReports: "My Reports",
+                history: "History",
+                jobApplications: "Job Applications",
+                myJobs: "My Jobs",
+                reviews: "Reviews",
+                logout: "Logout",
+                reportsApplied: "Reports Applied",
+                problemsSolved: "Problems Solved",
+                liveChats: "Live Chats",
+                rating: "Rating",
+                reportProblem: "Report a Problem",
+                myServices: "My Services",
+                serviceHistory: "Service History",
+                editProfile: "Edit Profile",
+                submitReport: "Submit Report",
+                selectLocation: "Select Location",
+                currentLocation: "Current Location",
+                manualLocation: "Manual Location",
+                emergencyLevel: "Emergency Level",
+                paymentMethod: "Payment Method",
+                pay50Percent: "Pay 50%",
+                menu: "Menu",
+                myCourses: "My Courses",
+                exams: "Exams",
+                students: "Students",
+                courses: "Courses",
+                back: "Back"
+            },
+            hi: {
+                welcome: "SkillNest सेवाओं में आपका स्वागत है",
+                selectLanguage: "अपनी पसंदीदा भाषा चुनें",
+                loginOrSignup: "लॉग इन करें या नया खाता बनाएं",
+                login: "लॉग इन",
+                signup: "साइन अप",
+                customer: "ग्राहक",
+                serviceProvider: "सेवा प्रदाता",
+                learner: "सीखने वाला",
+                mentor: "मार्गदर्शक",
+                email: "ईमेल आईडी",
+                password: "पासवर्ड",
+                fullName: "पूरा नाम",
+                phone: "फोन नंबर",
+                address: "पता",
+                bankAccount: "बैंक खाता संख्या",
+                confirmPassword: "पासवर्ड की पुष्टि करें",
+                createAccount: "खाता बनाएं",
+                alreadyHaveAccount: "पहले से ही एक खाता है?",
+                dontHaveAccount: "खाता नहीं है?",
+                profile: "प्रोफाइल",
+                myReports: "मेरी रिपोर्ट",
+                history: "इतिहास",
+                jobApplications: "नौकरी के आवेदन",
+                myJobs: "मेरी नौकरियां",
+                reviews: "समीक्षाएं",
+                logout: "लॉग आउट",
+                reportsApplied: "लागू रिपोर्ट",
+                problemsSolved: "हल की गई समस्याएं",
+                liveChats: "लाइव चैट",
+                rating: "रेटिंग",
+                reportProblem: "समस्या की रिपोर्ट करें",
+                myServices: "मेरी सेवाएं",
+                serviceHistory: "सेवा इतिहास",
+                editProfile: "प्रोफाइल संपादित करें",
+                submitReport: "रिपोर्ट सबमिट करें",
+                selectLocation: "स्थान चुनें",
+                currentLocation: "वर्तमान स्थान",
+                manualLocation: "मैन्युअल स्थान",
+                emergencyLevel: "आपातकालीन स्तर",
+                paymentMethod: "भुगतान विधि",
+                pay50Percent: "50% भुगतान करें",
+                menu: "मेनू",
+                myCourses: "मेरे पाठ्यक्रम",
+                exams: "परीक्षाएं",
+                students: "छात्र",
+                courses: "पाठ्यक्रम",
+                back: "वापस"
+            },
+            te: {
+                welcome: "SkillNest సేవలకు స్వాగతం",
+                selectLanguage: "మీకు నచ్చిన భాషను ఎంచుకోండి",
+                loginOrSignup: "లాగిన్ చేయండి లేదా కొత్త ఖాతాను సృష్టించండి",
+                login: "లాగిన్",
+                signup: "సైన్ అప్",
+                customer: "కస్టమర్",
+                serviceProvider: "సేవా ప్రదాత",
+                learner: "లెర్నర్",
+                mentor: "మార్గదర్శకుడు",
+                email: "ఇమెయిల్ ఐడి",
+                password: "పాస్వర్డ్",
+                fullName: "పూర్తి పేరు",
+                phone: "ఫోన్ నంబర్",
+                address: "చిరునామా",
+                bankAccount: "బ్యాంక్ ఖాతా నంబర్",
+                confirmPassword: "పాస్వర్డ్ని నిర్ధారించండి",
+                createAccount: "ఖాతా సృష్టించు",
+                alreadyHaveAccount: "ఇప్పటికే ఖాతా ఉందా?",
+                dontHaveAccount: "ఖాతా లేదు?",
+                profile: "ప్రొఫైల్",
+                myReports: "నా నివేదికలు",
+                history: "చరిత్ర",
+                jobApplications: "ఉద్యోగ దరఖాస్తులు",
+                myJobs: "నా ఉద్యోగాలు",
+                reviews: "సమీక్షలు",
+                logout: "లాగ్అవుట్",
+                reportsApplied: "దరఖాస్తు చేసిన నివేదికలు",
+                problemsSolved: "పరిష్కరించిన సమస్యలు",
+                liveChats: "లైవ్ చాట్లు",
+                rating: "రేటింగ్",
+                reportProblem: "సమస్యను నివేదించండి",
+                myServices: "నా సేవలు",
+                serviceHistory: "సేవా చరిత్ర",
+                editProfile: "ప్రొఫైల్ సవరించు",
+                submitReport: "నివేదిక సమర్పించండి",
+                selectLocation: "స్థానాన్ని ఎంచుకోండి",
+                currentLocation: "ప్రస్తుత స్థానం",
+                manualLocation: "మాన్యువల్ స్థానం",
+                emergencyLevel: "అత్యవసర స్థాయి",
+                paymentMethod: "చెల్లింపు పద్ధతి",
+                pay50Percent: "50% చెల్లించండి",
+                menu: "మెనూ",
+                myCourses: "నా కోర్సులు",
+                exams: "పరీక్షలు",
+                students: "విద్యార్థులు",
+                courses: "కోర్సులు",
+                back: "వెనక్కి"
+            }
+        };
+
+        // Current application state
+        let currentLanguage = 'en';
+        let currentUserType = '';
+        let currentUser = null;
+        let currentPage = 'profile';
+        let previousPage = 'profile';
+
+        // DOM elements
+        const languageSelectionScreen = document.getElementById('language-selection');
+        const userTypeSelectionScreen = document.getElementById('user-type-selection');
+        const authSelectionScreen = document.getElementById('auth-selection');
+        const loginScreen = document.getElementById('login-screen');
+        const dashboard = document.getElementById('dashboard');
+        const reportModal = document.getElementById('report-modal');
+        const editProfileModal = document.getElementById('edit-profile-modal');
+        
+        const languageButtons = document.querySelectorAll('.language-btn');
+        const userTypeCards = document.querySelectorAll('.user-type-card');
+        const authCards = document.querySelectorAll('.auth-card');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const showSignupLink = document.getElementById('show-signup');
+        const showLoginLink = document.getElementById('show-login');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const menuBtn = document.querySelector('.menu-btn');
+        const sidebar = document.querySelector('.sidebar');
+        const closeBtn = document.querySelector('.close-btn');
+        const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+        const logoutBtn = document.getElementById('logout-btn');
+        const headerLogoutBtn = document.getElementById('header-logout-btn');
+        const languageSwitcherBtn = document.querySelector('.language-switcher-btn');
+        const serviceCategories = document.querySelectorAll('.service-category');
+        const closeModalBtn = document.querySelectorAll('.close-modal');
+        const problemCategorySelect = document.getElementById('problem-category');
+        const otherCategoryDiv = document.getElementById('other-category');
+        const textToSpeechBtn = document.querySelector('.text-to-speech');
+        const currentLocationBtn = document.getElementById('current-location');
+        const manualLocationBtn = document.getElementById('manual-location');
+        const paymentButtons = document.querySelectorAll('.payment-btn');
+        const submitReportBtn = document.getElementById('submit-report');
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const saveProfileBtn = document.getElementById('save-profile-btn');
+        const backToLanguageBtn = document.getElementById('back-to-language');
+        const backToUserTypeBtn = document.getElementById('back-to-user-type');
+        const backToAuthBtn = document.getElementById('back-to-auth');
+        const backToPreviousBtn = document.getElementById('back-to-previous');
+        const backToProfileBtn = document.getElementById('back-to-profile');
+        const selectedUserTypeMessage = document.getElementById('selected-user-type-message');
+        const authMessage = document.getElementById('auth-message');
+
+        // Event Listeners
+        languageButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove selected class from all language buttons
+                languageButtons.forEach(btn => btn.classList.remove('selected'));
+                // Add selected class to clicked button
+                button.classList.add('selected');
+                
+                currentLanguage = button.getAttribute('data-lang');
+                updateLanguage();
+                setTimeout(() => {
+                    showScreen(userTypeSelectionScreen);
+                }, 300);
+            });
+        });
+
+        userTypeCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove selected class from all cards
+                userTypeCards.forEach(c => c.classList.remove('selected'));
+                // Add selected class to clicked card
+                card.classList.add('selected');
+                
+                currentUserType = card.getAttribute('data-user-type');
+                updateSelectedUserTypeMessage();
+                setTimeout(() => {
+                    showScreen(authSelectionScreen);
+                }, 300);
+            });
+        });
+
+        authCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove selected class from all cards
+                authCards.forEach(c => c.classList.remove('selected'));
+                // Add selected class to clicked card
+                card.classList.add('selected');
+                
+                const authType = card.getAttribute('data-auth-type');
+                updateAuthMessage(authType);
+                setTimeout(() => {
+                    showScreen(loginScreen);
+                    
+                    if (authType === 'login') {
+                        loginForm.classList.remove('hidden');
+                        signupForm.classList.add('hidden');
+                    } else {
+                        loginForm.classList.add('hidden');
+                        signupForm.classList.remove('hidden');
+                        updateUserTypeUI();
+                    }
+                }, 300);
+            });
+        });
+
+        // Location selection buttons
+        currentLocationBtn.addEventListener('click', () => {
+            currentLocationBtn.classList.add('selected');
+            manualLocationBtn.classList.remove('selected');
+            getCurrentLocation();
+        });
+
+        manualLocationBtn.addEventListener('click', () => {
+            manualLocationBtn.classList.add('selected');
+            currentLocationBtn.classList.remove('selected');
+            openManualLocation();
+        });
+
+        // Payment selection buttons
+        paymentButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                paymentButtons.forEach(btn => btn.classList.remove('selected'));
+                button.classList.add('selected');
+            });
+        });
+
+        // Service category selection
+        serviceCategories.forEach(category => {
+            category.addEventListener('click', () => {
+                if (currentUserType === 'customer') {
+                    serviceCategories.forEach(cat => cat.classList.remove('selected'));
+                    category.classList.add('selected');
+                    setTimeout(() => {
+                        showReportModal(category.getAttribute('data-service'));
+                    }, 300);
+                }
+            });
+        });
+
+        // Sidebar menu selection
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (link.getAttribute('data-page')) {
+                    // Remove active class from all sidebar links
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    link.classList.add('active');
+                    
+                    showPage(link.getAttribute('data-page'));
+                }
+                sidebar.classList.remove('open');
+            });
+        });
+
+        showSignupLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            updateUserTypeUI();
+        });
+
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+        });
+
+        loginBtn.addEventListener('click', handleLogin);
+        signupBtn.addEventListener('click', handleSignup);
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.add('open');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+
+        logoutBtn.addEventListener('click', handleLogout);
+        headerLogoutBtn.addEventListener('click', handleLogout);
+
+        languageSwitcherBtn.addEventListener('click', () => {
+            showScreen(languageSelectionScreen);
+        });
+
+        closeModalBtn.forEach(btn => {
+            btn.addEventListener('click', () => {
+                reportModal.classList.add('hidden');
+                editProfileModal.classList.add('hidden');
+            });
+        });
+
+        problemCategorySelect.addEventListener('change', () => {
+            if (problemCategorySelect.value === 'other') {
+                otherCategoryDiv.style.display = 'block';
+            } else {
+                otherCategoryDiv.style.display = 'none';
+            }
+        });
+
+        textToSpeechBtn.addEventListener('click', convertTextToSpeech);
+
+        submitReportBtn.addEventListener('click', submitReport);
+
+        editProfileBtn.addEventListener('click', openEditProfile);
+        saveProfileBtn.addEventListener('click', saveProfile);
+
+        backToLanguageBtn.addEventListener('click', () => {
+            showScreen(languageSelectionScreen);
+        });
+
+        backToUserTypeBtn.addEventListener('click', () => {
+            showScreen(userTypeSelectionScreen);
+        });
+
+        backToAuthBtn.addEventListener('click', () => {
+            showScreen(authSelectionScreen);
+        });
+
+        backToPreviousBtn.addEventListener('click', () => {
+            showPage(previousPage);
+        });
+
+        backToProfileBtn.addEventListener('click', () => {
+            showPage('profile');
+        });
+
+        // Functions
+        function updateLanguage() {
+            // Update all text content based on current language
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+        }
+
+        function updateSelectedUserTypeMessage() {
+            const userTypeText = document.querySelector(`[data-user-type="${currentUserType}"] h3`).textContent;
+            selectedUserTypeMessage.textContent = `Welcome, ${userTypeText}!`;
+        }
+
+        function updateAuthMessage(authType) {
+            const userTypeText = document.querySelector(`[data-user-type="${currentUserType}"] h3`).textContent;
+            if (authType === 'login') {
+                authMessage.textContent = `Login to your ${userTypeText} account`;
+            } else {
+                authMessage.textContent = `Create a new ${userTypeText} account`;
+            }
+        }
+
+        function showScreen(screen) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.add('hidden');
+            });
+            // Show the requested screen
+            screen.classList.remove('hidden');
+        }
+
+        function updateUserTypeUI() {
+            // Update signup form based on user type
+            const signupTitle = document.getElementById('signup-title');
+            
+            // Hide all user-specific fields first
+            document.getElementById('customer-fields').style.display = 'none';
+            document.getElementById('service-fields').style.display = 'none';
+            document.getElementById('learner-fields').style.display = 'none';
+            document.getElementById('mentor-fields').style.display = 'none';
+            
+            // Hide all menu types first
+            document.querySelectorAll('.sidebar-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
+            
+            // Show appropriate menu based on user type
+            document.getElementById(`${currentUserType}-menu`).style.display = 'block';
+            
+            // Update signup form
+            if (currentUserType === 'customer') {
+                signupTitle.textContent = 'Create Customer Account';
+                document.getElementById('customer-fields').style.display = 'block';
+            } else if (currentUserType === 'service') {
+                signupTitle.textContent = 'Create Service Provider Account';
+                document.getElementById('service-fields').style.display = 'block';
+            } else if (currentUserType === 'learner') {
+                signupTitle.textContent = 'Create Learner Account';
+                document.getElementById('learner-fields').style.display = 'block';
+            } else if (currentUserType === 'mentor') {
+                signupTitle.textContent = 'Create Mentor Account';
+                document.getElementById('mentor-fields').style.display = 'block';
+            }
+            
+            // Update dashboard UI based on user type
+            document.getElementById('customer-specific').style.display = 
+                currentUserType === 'customer' ? 'block' : 'none';
+            document.getElementById('service-specific').style.display = 
+                currentUserType === 'service' ? 'block' : 'none';
+            document.getElementById('learner-specific').style.display = 
+                currentUserType === 'learner' ? 'block' : 'none';
+            document.getElementById('mentor-specific').style.display = 
+                currentUserType === 'mentor' ? 'block' : 'none';
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Simple validation
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // In a real app, this would be an API call
+            currentUser = {
+                name: 'Demo User',
+                email: email,
+                phone: '9876543210',
+                type: currentUserType,
+                address: 'Sample Address, City, State',
+                experience: 5,
+                successRate: 85,
+                communication: 4,
+                behavior: 4
+            };
+            
+            // Update UI with user data
+            document.getElementById('user-name').textContent = currentUser.name;
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('profile-phone').textContent = '+91 ' + currentUser.phone;
+            
+            // Update service provider stats if applicable
+            if (currentUserType === 'service') {
+                document.getElementById('exp-years').textContent = currentUser.experience;
+                document.getElementById('success-rate').textContent = currentUser.successRate;
+                document.getElementById('comm-rating').textContent = currentUser.communication;
+                document.getElementById('behavior-rating').textContent = currentUser.behavior;
+            }
+            
+            // Show dashboard
+            showScreen(dashboard);
+            showPage('profile');
+        }
+
+        function handleSignup() {
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const phone = document.getElementById('signup-phone').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            
+            // Simple validation
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            if (phone.length !== 10 || isNaN(phone)) {
+                alert('Please enter a valid 10-digit phone number');
+                return;
+            }
+            
+            // Get user-specific data
+            let address = '';
+            let bankAccount = '';
+            
+            if (currentUserType === 'customer') {
+                address = document.getElementById('signup-address').value;
+            } else if (currentUserType === 'service') {
+                address = document.getElementById('signup-address-service').value;
+                bankAccount = document.getElementById('signup-bank').value;
+            } else if (currentUserType === 'learner') {
+                address = document.getElementById('signup-address-learner').value;
+            } else if (currentUserType === 'mentor') {
+                address = document.getElementById('signup-address-mentor').value;
+                bankAccount = document.getElementById('signup-bank-mentor').value;
+            }
+            
+            // In a real app, this would be an API call
+            currentUser = {
+                name: name,
+                email: email,
+                phone: phone,
+                address: address,
+                bankAccount: bankAccount,
+                type: currentUserType,
+                experience: 0,
+                successRate: 0,
+                communication: 0,
+                behavior: 0
+            };
+            
+            // Update UI with user data
+            document.getElementById('user-name').textContent = currentUser.name;
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('profile-phone').textContent = '+91 ' + currentUser.phone;
+            
+            // Show dashboard
+            showScreen(dashboard);
+            showPage('profile');
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            showScreen(languageSelectionScreen);
+        }
+
+        function showPage(page) {
+            // Update previous page
+            if (page !== currentPage) {
+                previousPage = currentPage;
+            }
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.add('hidden');
+            });
+            // Show the requested page
+            document.getElementById(`${page}-page`).classList.remove('hidden');
+            currentPage = page;
+        }
+
+        function showReportModal(serviceType) {
+            // Set the service type in the modal
+            problemCategorySelect.value = serviceType;
+            if (serviceType === 'other') {
+                otherCategoryDiv.style.display = 'block';
+            } else {
+                otherCategoryDiv.style.display = 'none';
+            }
+            
+            // Show the modal
+            reportModal.classList.remove('hidden');
+        }
+
+        function convertTextToSpeech() {
+            const text = document.getElementById('problem-description').value;
+            if (!text) {
+                alert('Please enter some text to convert to speech');
+                return;
+            }
+            
+            // In a real app, this would use a TTS API
+            alert('Text to speech conversion would happen here. In a real app, this would use a TTS API.');
+        }
+
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        document.getElementById('location-display').textContent = 
+                            `Current Location: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                    },
+                    (error) => {
+                        alert('Unable to retrieve your location. Please try manual selection.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by this browser. Please try manual selection.');
+            }
+        }
+
+        function openManualLocation() {
+            // In a real app, this would open Google Maps
+            alert('Manual location selection would open Google Maps here.');
+            document.getElementById('location-display').textContent = 
+                'Manual location selected (simulated)';
+        }
+
+        function submitReport() {
+            const category = problemCategorySelect.value;
+            const description = document.getElementById('problem-description').value;
+            const location = document.getElementById('location-display').textContent;
+            
+            if (!description) {
+                alert('Please describe your problem');
+                return;
+            }
+            
+            if (location === 'No location selected') {
+                alert('Please select a location');
+                return;
+            }
+            
+            // In a real app, this would submit to a backend
+            alert('Report submitted successfully! 50% payment would be processed.');
+            reportModal.classList.add('hidden');
+            
+            // Update stats
+            const reportsCount = document.getElementById('reports-count');
+            reportsCount.textContent = parseInt(reportsCount.textContent) + 1;
+        }
+
+        function openEditProfile() {
+            // Populate the edit form with current user data
+            document.getElementById('edit-name').value = currentUser.name;
+            document.getElementById('edit-email').value = currentUser.email;
+            document.getElementById('edit-phone').value = currentUser.phone;
+            document.getElementById('edit-address').value = currentUser.address || '';
+            
+            // Show service provider specific fields if applicable
+            if (currentUserType === 'service') {
+                document.getElementById('service-edit-fields').style.display = 'block';
+                document.getElementById('edit-experience').value = currentUser.experience;
+                document.getElementById('edit-success-rate').value = currentUser.successRate;
+            } else {
+                document.getElementById('service-edit-fields').style.display = 'none';
+            }
+            
+            // Show the modal
+            editProfileModal.classList.remove('hidden');
+        }
+
+        function saveProfile() {
+            // Get updated values from the form
+            const name = document.getElementById('edit-name').value;
+            const email = document.getElementById('edit-email').value;
+            const phone = document.getElementById('edit-phone').value;
+            const address = document.getElementById('edit-address').value;
+            
+            // Update user object
+            currentUser.name = name;
+            currentUser.email = email;
+            currentUser.phone = phone;
+            currentUser.address = address;
+            
+            // Update service provider specific data if applicable
+            if (currentUserType === 'service') {
+                currentUser.experience = document.getElementById('edit-experience').value;
+                currentUser.successRate = document.getElementById('edit-success-rate').value;
+                
+                // Update displayed stats
+                document.getElementById('exp-years').textContent = currentUser.experience;
+                document.getElementById('success-rate').textContent = currentUser.successRate;
+            }
+            
+            // Update UI
+            document.getElementById('user-name').textContent = currentUser.name;
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('profile-phone').textContent = '+91 ' + currentUser.phone;
+            
+            // Close the modal
+            editProfileModal.classList.add('hidden');
+            
+            alert('Profile updated successfully!');
+        }
+
+        // Initialize the app
+        updateLanguage();
+    </script>
+</body>
+</html>
